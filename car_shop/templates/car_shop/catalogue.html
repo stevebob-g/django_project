@@ -1,0 +1,54 @@
+{% extends "car_shop/base.html" %}
+
+{% block title %}Catalogue - CarShop{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+    <h1 style="text-align: center; color: #2c3e50; margin-bottom: 30px;">Trouvez votre futur véhicule</h1>
+
+    <section style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 40px;">
+        <form method="GET" action="{% url 'catalogue' %}" style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-end; justify-content: center;">
+            <div style="display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-weight: bold; font-size: 0.9em; color: #555;">Marque</label>
+                <select name="marque" style="padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+                    <option value="">Toutes les marques</option>
+                    {% for m in marques %}
+                        <option value="{{ m.id }}" {% if request.GET.marque == m.id|stringformat:"i" %}selected{% endif %}>{{ m.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-weight: bold; font-size: 0.9em; color: #555;">Prix Min (€)</label>
+                <input type="number" name="prix_min" value="{{ request.GET.prix_min }}" placeholder="Min" style="padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-weight: bold; font-size: 0.9em; color: #555;">Prix Max (€)</label>
+                <input type="number" name="prix_max" value="{{ request.GET.prix_max }}" placeholder="Max" style="padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+            </div>
+
+            <button type="submit" style="background: #e74c3c; color: white; border: none; padding: 11px 25px; border-radius: 8px; cursor: pointer; font-weight: bold;">Filtrer</button>
+            <a href="{% url 'catalogue' %}" style="color: #7f8c8d; text-decoration: none; font-size: 0.9em;">Réinitialiser</a>
+        </form>
+    </section>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px;">
+        {% for voiture in voitures %}
+        <a href="{% url 'detail_vehicule' voiture.id %}" style="text-decoration: none; color: inherit;">
+            <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); transition: 0.3s; position: relative;">
+                <span style="position: absolute; top: 15px; right: 15px; background: #000; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.8em;">{{ voiture.annee }}</span>
+                <img src="{{ voiture.image_principale.url }}" alt="{{ voiture.titre }}" style="width: 100%; height: 220px; object-fit: cover;">
+                <div style="padding: 20px;">
+                    <h3 style="margin: 0 0 10px 0; color: #2c3e50;">{{ voiture.marque }} {{ voiture.modele }}</h3>
+                    <p style="color: #7f8c8d; font-size: 0.95em; margin-bottom: 15px;">{{ voiture.kilometrage }} km • {{ voiture.get_energie_display }}</p>
+                    <div style="font-size: 1.4em; color: #e74c3c; font-weight: bold;">{{ voiture.prix }} €</div>
+                </div>
+            </div>
+        </a>
+        {% empty %}
+        <p style="grid-column: 1 / -1; text-align: center; padding: 50px; color: #7f8c8d;">Aucun véhicule trouvé.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

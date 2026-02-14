@@ -1,0 +1,49 @@
+{% extends "car_shop/base.html" %}
+
+{% block title %}{{ voiture.marque }} {{ voiture.modele }} - CarShop{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 900px; margin: 20px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+    <a href="{% url 'catalogue' %}" style="text-decoration: none; color: #e74c3c; font-weight: bold;">← Retour au catalogue</a>
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+        <h1 style="margin: 0;">{{ voiture.marque }} {{ voiture.modele }}</h1>
+        <div style="font-size: 2em; color: #e74c3c; font-weight: bold;">{{ voiture.prix }} €</div>
+    </div>
+    
+    <p style="color: #7f8c8d; margin-bottom: 20px;">Publié le {{ voiture.date_ajout|date:"d M Y" }}</p>
+
+    <img src="{{ voiture.image_principale.url }}" alt="{{ voiture.titre }}" style="width: 100%; height: 500px; object-fit: cover; border-radius: 10px;">
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 30px 0;">
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 5px solid #000;"><strong>Année :</strong> {{ voiture.annee }}</div>
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 5px solid #000;"><strong>Kilométrage :</strong> {{ voiture.kilometrage }} km</div>
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 5px solid #000;"><strong>Énergie :</strong> {{ voiture.get_energie_display }}</div>
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 5px solid #000;"><strong>Boîte :</strong> {{ voiture.get_boite_vitesse_display }}</div>
+    </div>
+
+    <h3>Description</h3>
+    <p style="line-height: 1.8; color: #444;">{{ voiture.description }}</p>
+
+    <div style="background: #000; color: white; padding: 30px; border-radius: 10px; margin-top: 40px;">
+        <h3 style="color: #e74c3c; margin-top: 0;">Contacter le garage</h3>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div style="padding: 10px; background: #27ae60; color: white; border-radius: 5px; margin-bottom: 15px;">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <input type="text" name="nom" placeholder="Nom complet" required style="padding: 12px; border-radius: 5px; border: none;">
+                <input type="email" name="email" placeholder="Votre Email" required style="padding: 12px; border-radius: 5px; border: none;">
+            </div>
+            <input type="text" name="telephone" placeholder="Téléphone" required style="width: 100%; padding: 12px; border-radius: 5px; border: none; margin: 10px 0; box-sizing: border-box;">
+            <textarea name="message" rows="4" placeholder="Votre question..." required style="width: 100%; padding: 12px; border-radius: 5px; border: none; margin-bottom: 10px; box-sizing: border-box;"></textarea>
+            <button type="submit" style="width: 100%; padding: 15px; background: #e74c3c; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 1.1em;">Envoyer la demande</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
