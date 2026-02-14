@@ -1,0 +1,11 @@
+# Ignorer les fichiers SQLite
+db.sqlite3
+
+# Ignorer les dossiers IDE (PyCharm, VS Code…)
+.idea/
+
+# Ignorer les fichiers Python compilés
+__pycache__/
+
+# Ignorer les fichiers d'environnement
+.env
